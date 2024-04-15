@@ -68,6 +68,6 @@ def extract_invoice(pdf_file):
     print(chain.invoke(text)["text"])
 
 
-pdf_file = "../inputs/amazon-invoice.pdf"
+pdf_file = "inputs/amazon-invoice.pdf"
 
 extract_invoice(pdf_file=pdf_file)
