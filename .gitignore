@@ -1,2 +1,5 @@
 .genaienv/
 .env
+.vscode/
+chroma_db/
+*.pyc
