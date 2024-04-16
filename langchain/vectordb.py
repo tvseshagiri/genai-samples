@@ -16,27 +16,23 @@ import os
 load_dotenv()
 
 
-docs = load_urls_data("inputs/urls.csv")
-# loader = RecursiveUrlLoader(url="https://www.tcs.com/", max_depth=2)
-# docs = loader.load()
-# text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-# texts = text_splitter.split_documents(docs)
-
-text_splitter = RecursiveCharacterTextSplitter(
-    # Set a really small chunk size, just to show.
-    chunk_size=1000,
-    chunk_overlap=0,
-    length_function=len,
-    # is_separator_regex=False,
-)
-
-texts = text_splitter.split_documents(docs)
-
 embeddings = OpenAIEmbeddings()
 
 
 docsearch = None
 if not os.path.exists("./chroma_db"):
+    docs = load_urls_data("inputs/urls.csv")
+
+    text_splitter = RecursiveCharacterTextSplitter(
+        # Set a really small chunk size, just to show.
+        chunk_size=1000,
+        chunk_overlap=0,
+        length_function=len,
+        # is_separator_regex=False,
+    )
+
+    texts = text_splitter.split_documents(docs)
+
     docsearch = Chroma.from_documents(
         texts, embeddings, persist_directory="./chroma_db"
     )
@@ -53,11 +49,13 @@ qa = RetrievalQA.from_chain_type(
 
 qry = ""
 
-while qry != "exit":
+while True:
     try:
         qry = input("Enter your query: ")
-        result = qa({"query": qry})
-        print("System: %s \n" % qa.run(qry))
+        if qry == "exit":
+            exit(0)
+        else:
+            print("System: %s \n" % qa.invoke(qry)["result"])
     except Exception as e:
         if e.code == 429:
             pass
