@@ -4,3 +4,5 @@
 chroma_db/
 *.pyc
 __pycache__/
+tvseshagiri_accessKeys.csv
+tvseshagiri_credentials.csv
